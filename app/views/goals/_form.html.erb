@@ -1,0 +1,125 @@
+<!-- app/views/goals/_form.html.erb -->
+<%= form_with model: goal, local: true, class: "row g-3" do |form| %>
+  <% if goal.errors.any? %>
+    <div class="col-12">
+      <div class="alert alert-danger" role="alert">
+        <h6 class="alert-heading">
+          <i class="fas fa-exclamation-circle me-2"></i>
+          Please fix the following errors:
+        </h6>
+        <ul class="mb-0 mt-2">
+          <% goal.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="col-12">
+    <%= form.label :title, class: "form-label fw-bold" do %>
+      <i class="fas fa-bullseye me-1"></i>
+      Goal Title <span class="text-danger">*</span>
+    <% end %>
+    <%= form.text_field :title, class: "form-control form-control-lg", 
+        placeholder: "Enter your goal title...", maxlength: 100 %>
+    <div class="form-text">Maximum 100 characters</div>
+  </div>
+
+  <div class="col-12">
+    <%= form.label :description, class: "form-label fw-bold" do %>
+      <i class="fas fa-align-left me-1"></i>
+      Description
+    <% end %>
+    <%= form.text_area :description, class: "form-control", rows: 4, 
+        placeholder: "Describe your goal in detail..." %>
+    <div class="form-text">Optional: Add more details about your goal</div>
+  </div>
+
+  <div class="col-md-6">
+    <%= form.label :target_date, class: "form-label fw-bold" do %>
+      <i class="fas fa-calendar me-1"></i>
+      Target Date
+    <% end %>
+    <%= form.date_field :target_date, class: "form-control", 
+        min: Date.current %>
+    <div class="form-text">When do you want to achieve this goal?</div>
+  </div>
+
+  <div class="col-md-6">
+    <%= form.label :progress, class: "form-label fw-bold" do %>
+      <i class="fas fa-chart-line me-1"></i>
+      Progress <span class="text-danger">*</span>
+    <% end %>
+    <div class="input-group">
+      <%= form.range_field :progress, class: "form-range", min: 0, max: 100, 
+          oninput: "updateProgressDisplay(this.value)" %>
+      <div class="input-group-text">
+        <span id="progressDisplay" class="fw-bold">
+          <%= goal.progress || 0 %>%
+        </span>
+      </div>
+    </div>
+    <div class="progress mt-2" style="height: 10px;">
+      <div id="progressBar" 
+           class="progress-bar bg-<%= goal.progress_color || 'danger' %>" 
+           style="width: <%= goal.progress || 0 %>%"></div>
+    </div>
+  </div>
+
+  <div class="col-12">
+    <div class="form-check form-switch">
+      <%= form.check_box :completed, class: "form-check-input", role: "switch" %>
+      <%= form.label :completed, class: "form-check-label" do %>
+        <i class="fas fa-check-circle me-1"></i>
+        Mark as completed
+      <% end %>
+    </div>
+  </div>
+
+  <div class="col-12">
+    <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+      <%= link_to 'Cancel', goal.persisted? ? goal : goals_path, 
+          class: "btn btn-outline-secondary" %>
+      
+      <div>
+        <% if goal.persisted? %>
+          <%= form.submit 'Update Goal', class: "btn btn-primary btn-lg px-4" %>
+        <% else %>
+          <%= form.submit 'Create Goal', class: "btn btn-success btn-lg px-4" %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<script>
+function updateProgressDisplay(value) {
+  // Update the progress display
+  document.getElementById('progressDisplay').textContent = value + '%';
+  
+  // Update the progress bar
+  const progressBar = document.getElementById('progressBar');
+  progressBar.style.width = value + '%';
+  
+  // Update progress bar color based on value
+  progressBar.className = 'progress-bar';
+  if (value <= 25) {
+    progressBar.classList.add('bg-danger');
+  } else if (value <= 50) {
+    progressBar.classList.add('bg-warning');
+  } else if (value <= 75) {
+    progressBar.classList.add('bg-info');
+  } else {
+    progressBar.classList.add('bg-success');
+  }
+}
+
+// Initialize progress display on page load
+document.addEventListener('DOMContentLoaded', function() {
+  const progressInput = document.querySelector('input[type="range"][name*="progress"]');
+  if (progressInput) {
+    updateProgressDisplay(progressInput.value);
+  }
+});
+</script>
