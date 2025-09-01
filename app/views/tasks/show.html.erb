@@ -41,11 +41,12 @@
       </div>
       <div class="card-body d-grid gap-2">
         <%= link_to "Edit Task", edit_task_path(@task), class: "btn btn-primary" %>
-        <%= link_to toggle_completed_task_path(@task), method: :patch, 
+        <%= button_to toggle_completed_task_path(@task), 
+                    method: :patch, 
                     class: "btn btn-success" do %>
           <%= @task.completed? ? "Mark Incomplete" : "Mark Complete" %>
         <% end %>
-        <%= link_to "Delete Task", @task, 
+        <%= button_to "Delete Task", @task, 
                     method: :delete, 
                     data: { confirm: "Are you sure?" }, 
                     class: "btn btn-danger" %>
