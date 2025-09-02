@@ -1,0 +1,106 @@
+<div class="row">
+  <div class="col-12">
+    <h1 class="mb-4">Welcome back, <%= current_user.first_name %>! 👋</h1>
+  </div>
+</div>
+
+<!-- Stats Cards -->
+<div class="row mb-4">
+  <div class="col-md-3">
+    <div class="card bg-primary text-white">
+      <div class="card-body text-center">
+        <h5>Total Tasks</h5>
+        <h2><%= @total_tasks_count %></h2>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card bg-success text-white">
+      <div class="card-body text-center">
+        <h5>Completed</h5>
+        <h2><%= @completed_tasks_count %></h2>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card bg-info text-white">
+      <div class="card-body text-center">
+        <h5>Completion Rate</h5>
+        <h2><%= @completion_rate %>%</h2>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card bg-warning text-white">
+      <div class="card-body text-center">
+        <h5>Overdue</h5>
+        <h2><%= @overdue_tasks.count %></h2>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Recent Tasks and Goals -->
+<div class="row">
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h5>Upcoming Tasks</h5>
+        <%= link_to "View All", tasks_path, class: "btn btn-sm btn-primary" %>
+      </div>
+      <div class="card-body">
+        <% if @tasks.any? %>
+          <% @tasks.each do |task| %>
+            <div class="d-flex justify-content-between align-items-center border-bottom py-2">
+              <div>
+                <strong><%= task.title %></strong>
+                <span class="badge bg-<%= task.priority_color %>"><%= task.priority_label %></span>
+                <% if task.due_date %>
+                  <small class="text-muted d-block">Due: <%= task.due_date.strftime("%B %d, %Y") %></small>
+                <% end %>
+              </div>
+              <%= link_to "Complete", toggle_completed_task_path(task), 
+                          method: :patch, class: "btn btn-sm btn-success" %>
+            </div>
+          <% end %>
+        <% else %>
+          <p class="text-muted">No pending tasks. Great job! 🎉</p>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h5>Active Goals</h5>
+        <%= link_to "View All", goals_path, class: "btn btn-sm btn-primary" %>
+      </div>
+      <div class="card-body">
+        <% if @goals.any? %>
+          <% @goals.each do |goal| %>
+            <div class="mb-3">
+              <strong><%= goal.title %></strong>
+              <div class="progress mt-2">
+                <div class="progress-bar bg-<%= goal.progress_color %>" 
+                     style="width: <%= goal.progress %>%" 
+                     aria-valuenow="<%= goal.progress %>" 
+                     aria-valuemin="0" 
+                     aria-valuemax="100">
+                  <%= goal.progress %>%
+                </div>
+              </div>
+              <% if goal.target_date %>
+                <small class="text-muted">
+                  Target: <%= goal.target_date.strftime("%B %d, %Y") %>
+                </small>
+              <% end %>
+            </div>
+          <% end %>
+        <% else %>
+          <p class="text-muted">No active goals.</p>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

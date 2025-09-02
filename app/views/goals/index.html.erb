@@ -1,0 +1,69 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1>My Goals</h1>
+  <%= link_to "New Goal", new_goal_path, class: "btn btn-primary" %>
+</div>
+
+<div class="row">
+  <% if @goals.any? %>
+    <% @goals.each do |goal| %>
+      <div class="col-md-6 mb-3">
+        <div class="card">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start">
+              <div class="flex-grow-1">
+                <h5 class="card-title"><%= goal.title %></h5>
+                <% if goal.description.present? %>
+                  <p class="card-text"><%= truncate(goal.description, length: 100) %></p>
+                <% end %>
+                
+                <div class="progress mb-2">
+                  <div class="progress-bar bg-<%= goal.progress_color %>" 
+                       style="width: <%= goal.progress %>%" 
+                       aria-valuenow="<%= goal.progress %>" 
+                       aria-valuemin="0" 
+                       aria-valuemax="100">
+                    <%= goal.progress %>%
+                  </div>
+                </div>
+                
+                <% if goal.target_date %>
+                  <small class="text-muted">Target: <%= goal.target_date.strftime("%B %d, %Y") %></small>
+                <% end %>
+              </div>
+              
+              <div class="dropdown">
+                <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="goalDropdown<%= goal.id %>" data-bs-toggle="dropdown" aria-expanded="false">
+                  Actions
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="goalDropdown<%= goal.id %>">
+                  <li><%= link_to "View", goal, class: "dropdown-item" %></li>
+                  <li><%= link_to "Edit", edit_goal_path(goal), class: "dropdown-item" %></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li>
+                    <%= button_to "Delete", goal, 
+                                  method: :delete, 
+                                  data: { confirm: "Are you sure?" }, 
+                                  class: "dropdown-item btn btn-link text-start p-0 text-danger",
+                                  style: "border: none; background: none;" %>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            
+            <% if goal.completed? %>
+              <span class="badge bg-success mt-2">Completed ✓</span>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  <% else %>
+    <div class="col-12">
+      <div class="text-center py-5">
+        <h3>No goals yet</h3>
+        <p class="text-muted">Set your first goal and start tracking your progress!</p>
+        <%= link_to "Create Goal", new_goal_path, class: "btn btn-primary" %>
+      </div>
+    </div>
+  <% end %>
+</div>
