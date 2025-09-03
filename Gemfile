@@ -11,7 +11,7 @@ gem "importmap-rails"
 gem "turbo-rails"
 gem "stimulus-rails"
 gem "jbuilder"
-gem "redis", "~> 4.0"
+gem "redis", "~> 5.4"
 gem "bootsnap", ">= 1.4.4", require: false
 
 gem 'tzinfo-data'
