@@ -5,7 +5,7 @@ ruby "3.2.2"
 gem 'sassc-rails'
 gem "cssbundling-rails"
 gem "rails", "~> 7.1.3"
-gem "pg", "~> 1.1"
+gem "pg", "~> 1.6"
 gem "puma", "~> 5.0"
 gem "importmap-rails"
 gem "turbo-rails"
